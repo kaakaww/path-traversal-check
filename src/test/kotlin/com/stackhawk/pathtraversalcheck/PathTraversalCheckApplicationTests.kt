@@ -9,8 +9,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.web.servlet.MockMvc
 import com.stackhawk.pathtraversalcheck.HelloController.Companion.BASE_PATH
+import java.nio.file.Path
+import org.junit.jupiter.api.AfterEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
@@ -18,8 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @AutoConfigureMockMvc
 class PathTraversalCheckApplicationTests(@Autowired val mockMvc: MockMvc) {
 
-    @BeforeEach
-    fun beforeEach() {
+    fun cleanFiles(): Triple<Path, Path, String> {
         val basePath = Paths.get(BASE_PATH)
         val backup = Paths.get("$basePath.bak")
         val file = "$basePath/hello"
@@ -27,9 +29,21 @@ class PathTraversalCheckApplicationTests(@Autowired val mockMvc: MockMvc) {
         Files.deleteIfExists(basePath)
         Files.deleteIfExists(backup)
 
+        return Triple(basePath, backup, file)
+    }
+
+    @BeforeEach
+    fun beforeEach() {
+        val (basePath, backup, file) = cleanFiles()
+
         Files.createDirectory(basePath)
         File(file).writeText("Hello World")
         Files.copy(basePath, backup)
+    }
+
+    @AfterEach
+    fun afterEach() {
+        cleanFiles()
     }
 
     @Test

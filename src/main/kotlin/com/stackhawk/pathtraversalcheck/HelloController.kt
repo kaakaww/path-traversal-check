@@ -37,6 +37,7 @@ class HelloController {
     fun getContent(path: String): ResponseEntity<String> {
         val normalizedPath: String = Paths.get(path).normalize().toString()
         logger.info("Normalized Path $normalizedPath")
+
         return if (VALID_PATHS.contains(normalizedPath)) {
             val file = File(BASE_PATH, normalizedPath)
             logger.info("Canonical Path ${file.canonicalPath}")
