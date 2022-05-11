@@ -35,10 +35,14 @@ class PathTraversalCheckApplicationTests(@Autowired val mockMvc: MockMvc) {
     @Test
     fun `test paths`() {
         getPath("/hello", HttpStatus.OK)
+
         getPath("/../usr_content.bak/hello", HttpStatus.INTERNAL_SERVER_ERROR)
+        getPath("/../../usr_content.bak/hello", HttpStatus.INTERNAL_SERVER_ERROR)
+        getPath("/./user_content.bak/hello", HttpStatus.INTERNAL_SERVER_ERROR)
         getPath("/usr_content.bak/hello", HttpStatus.INTERNAL_SERVER_ERROR)
         getPath("/../usr_content/hello", HttpStatus.INTERNAL_SERVER_ERROR)
         getPath("hello", HttpStatus.INTERNAL_SERVER_ERROR)
+        getPath("../hello", HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
     fun getPath(path: String, status: HttpStatus) {
