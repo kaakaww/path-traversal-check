@@ -1,19 +1,18 @@
 package com.stackhawk.pathtraversalcheck
 
+import com.stackhawk.pathtraversalcheck.HelloController.Companion.BASE_PATH
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.web.servlet.MockMvc
-import com.stackhawk.pathtraversalcheck.HelloController.Companion.BASE_PATH
-import java.nio.file.Path
-import org.junit.jupiter.api.AfterEach
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
@@ -54,7 +53,9 @@ class PathTraversalCheckApplicationTests(@Autowired val mockMvc: MockMvc) {
         getPath("/../../usr_content.bak/hello", HttpStatus.INTERNAL_SERVER_ERROR)
         getPath("/./user_content.bak/hello", HttpStatus.INTERNAL_SERVER_ERROR)
         getPath("/usr_content.bak/hello", HttpStatus.INTERNAL_SERVER_ERROR)
+
         getPath("/../usr_content/hello", HttpStatus.INTERNAL_SERVER_ERROR)
+
         getPath("hello", HttpStatus.INTERNAL_SERVER_ERROR)
         getPath("../hello", HttpStatus.INTERNAL_SERVER_ERROR)
     }
