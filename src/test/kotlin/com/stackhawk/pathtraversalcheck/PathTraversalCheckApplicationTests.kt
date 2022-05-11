@@ -47,7 +47,13 @@ class PathTraversalCheckApplicationTests(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    fun `test paths`() {
+    fun `test intentional vulnerability file`() {
+        mockMvc.perform(MockMvcRequestBuilders.get("/file?filePath=/etc/passwd"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+    }
+
+    @Test
+    fun `test file check`() {
         getPath("/hello", HttpStatus.OK)
 
         getPath("/../usr_content.bak/hello", HttpStatus.INTERNAL_SERVER_ERROR)
