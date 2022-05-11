@@ -24,6 +24,7 @@ class PathTraversalCheckApplicationTests(@Autowired val mockMvc: MockMvc) {
         val basePath = Paths.get(BASE_PATH)
         val backup = Paths.get("$basePath.bak")
         val file = "$basePath/hello"
+
         Files.deleteIfExists(Paths.get(file))
         Files.deleteIfExists(basePath)
         Files.deleteIfExists(backup)
